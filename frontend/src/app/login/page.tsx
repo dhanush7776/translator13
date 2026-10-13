@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 
+// Points to Render backend in production (or fallback relative URL in development)
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+
 export default function LoginPage() {
   const router = useRouter();
   const [isSignUp, setIsSignUp] = useState(false);
@@ -29,7 +32,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const endpoint = isSignUp ? "/api/auth/signup" : "/api/auth/login";
+      const endpoint = isSignUp ? `${API_URL}/api/auth/signup` : `${API_URL}/api/auth/login`;
       const payload = isSignUp ? { email, password, name } : { email, password };
 
       const res = await fetch(endpoint, {
@@ -71,7 +74,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: "admin@accessai.io", password: "accessai123" }),
